@@ -9,43 +9,6 @@ TrainedNinja::TrainedNinja(std::string name , Point loc) : Character(name,loc){
     this->hit_points = 120;
 }
 
-//destructor
-TrainedNinja::~TrainedNinja(){}
-
-//------------------------------Rule of five----------------------------------------------------------
-// Copy constructor
-TrainedNinja::TrainedNinja(const TrainedNinja& other)
-    : Character(other) {
-    // Perform any additional deep copying or resource allocation specific to TrainedNinja
-}
-
-// Copy assignment operator
-TrainedNinja& TrainedNinja::operator=(const TrainedNinja& other) {
-    if (this != &other) {
-        Character::operator=(other);
-        // Perform any additional deep copying or resource allocation specific to TrainedNinja
-    }
-    return *this;
-}
-
-// Move constructor
-TrainedNinja::TrainedNinja(TrainedNinja&& other) noexcept
-    : Character(std::move(other)) {
-    // Transfer ownership of any resources from 'other' to 'this'
-}
-
-// Move assignment operator
-TrainedNinja& TrainedNinja::operator=(TrainedNinja&& other) noexcept {
-    if (this != &other) {
-        Character::operator=(std::move(other));
-        // Transfer ownership of any resources from 'other' to 'this'
-    }
-    return *this;
-}
-
-
-//----------------------------------------------------------------------------------------------------
-
 
 //functions
 

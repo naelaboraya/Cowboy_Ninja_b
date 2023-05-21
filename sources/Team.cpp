@@ -16,37 +16,37 @@ Team::~Team(){
     }
 }
 
-//-----------------------------------------Rule of five-----------------------------------
-// Copy constructor
+//----------------------------------------------------------------------------
+//Copy constructor
 Team::Team(const Team& other)
     : _captain(nullptr), _soilders(other._soilders.size()) {
-    // Deep copy the captain
+    
     if (other._captain != nullptr) {
         _captain = new Character(*other._captain);
     }
 
-    // Deep copy the soilders
+    
     for (size_t i = 0; i < other._soilders.size(); i++) {
         _soilders[i] = new Character(*other._soilders[i]);
     }
 }
 
-// Copy assignment operator
+//Copy assignment operator
 Team& Team::operator=(const Team& other) {
     if (this != &other) {
-        // Delete existing captain and soilders
+        //Delete existing captain and soilders
         delete _captain;
         for (Character* soilder : _soilders) {
             delete soilder;
         }
 
-        // Deep copy the captain
+        //Deep copy the captain
         _captain = nullptr;
         if (other._captain != nullptr) {
             _captain = new Character(*other._captain);
         }
 
-        // Deep copy the soilders
+        //Deep copy the soilders
         _soilders.resize(other._soilders.size());
         for (size_t i = 0; i < other._soilders.size(); i++) {
             _soilders[i] = new Character(*other._soilders[i]);
@@ -55,7 +55,7 @@ Team& Team::operator=(const Team& other) {
     return *this;
 }
 
-// Move constructor
+//Move constructor
 Team::Team(Team&& other) noexcept
     : _captain(std::move(other._captain)), _soilders(std::move(other._soilders)) {
     // Set 'other' to a valid state
@@ -63,7 +63,7 @@ Team::Team(Team&& other) noexcept
     other._soilders.clear();
 }
 
-// Move assignment operator
+//Move assignment operator
 Team& Team::operator=(Team&& other) noexcept {
     if (this != &other) {
         // Delete existing captain and soilders
@@ -126,18 +126,12 @@ void Team::attack(Team* enemy_team){
         throw std::runtime_error("the attacked team is dead!");
     }
 
-    if(this->stillAlive()==0 || enemy_team->stillAlive()==0){
-        if(this->stillAlive()==0){
-            std::cout<< "all the attacking team soilders are dead! " << endl;
-            return;
-        }
-        else if (enemy_team->stillAlive()==0){
-            std::cout<< "all the attacked team soilders are dead!" << endl;
-            return;
-        }
-        //return because either the attacking team or the attacked team soilders are dead
-        //return;
+  
+    if(this->stillAlive()==0){
+        throw std::runtime_error("the attacking team is dead!");        
     }
+       
+    
        
      if (this->_captain==nullptr){
         throw std::runtime_error("null captain!");
@@ -173,86 +167,112 @@ void Team::attack(Team* enemy_team){
     //remaining soilders (in the attacked team)//
     int remainingSoldiers = this->_soilders.size();
     
+    //Iterate through the soldiers vector , first on cowboys and after that on ninjas (ordered by insertion to team)
+    
     for (Character* soldier : this->_soilders) {
-    if (soldier->isAlive()) {
-        // Perform attack logic on chosenEnemy--------------------------------------------------
-        
-        //checking if the currrent soldier is a cowboy 
-        if (Cowboy* cowboy = dynamic_cast<Cowboy*>(soldier)) {
-            //attacking logic for cowboy
-            if(cowboy->hasboolets()){
-                cowboy->shoot(chosenEnemy);
-            }
-            else if(!cowboy->hasboolets()){
-                cowboy->reload();
-            }
-            //remainingSoldiers--;
-        }
-
-        //checking if the current sodldier is OldNinja
-        if (OldNinja* oldninja = dynamic_cast<OldNinja*>(soldier)) {
-            //attacking logic for oldNinja
-             
-            if(oldninja->distance(chosenEnemy) < 1){
-                 
-                oldninja->slash(chosenEnemy);   
-            }
-            else if (oldninja->distance(chosenEnemy) >= 1){
-                oldninja->move(chosenEnemy);
-            }
-            //remainingSoldiers--;
-        }
-
-        //checking if the current sodldier is TrainedNinja
-        if (TrainedNinja* trainedninja = dynamic_cast<TrainedNinja*>(soldier)) {
-            //attacking logic for TrainedNinja
-          
-            if(trainedninja->distance(chosenEnemy) < 1){
-                trainedninja->slash(chosenEnemy);   
-            }
-            else if (trainedninja->distance(chosenEnemy) >= 1){
-                trainedninja->move(chosenEnemy);
-            }
-            //remainingSoldiers--;
-        }
-
-        //checking if the current sodldier is YoungNinja
-        if (YoungNinja* youngninja = dynamic_cast<YoungNinja*>(soldier)) {
-            //attacking logic for YoungNinja
-            if(youngninja->distance(chosenEnemy) < 1){
-                youngninja->slash(chosenEnemy);   
-            }
-            else if (youngninja->distance(chosenEnemy) >= 1){
-                youngninja->move(chosenEnemy);
-            }
-            //remainingSoldiers--;
-        }
-        
-
-        //End of performing the attack logic ---------------------------------------------------
-        
-        if (!chosenEnemy->isAlive()) {
-           
-            chosenEnemy = chooseEnemy(enemy_team);
-        }
-
-        //remainingSoldiers--;
-        
-      
-        if(enemy_team->stillAlive()==0){
-            
+        if (chosenEnemy == nullptr) {
             break;
         }
-         
+        
+        if (soldier->isAlive() && dynamic_cast<Cowboy*>(soldier)) {
+            Cowboy* cowboy = dynamic_cast<Cowboy*>(soldier);
+            if (cowboy->hasboolets()) {
+                cowboy->shoot(chosenEnemy);
+            } else {
+                cowboy->reload();
+            }
+            
+            if (!chosenEnemy->isAlive()) {
+                chosenEnemy = chooseEnemy(enemy_team);
+            }
+            
+            remainingSoldiers--;
+            
+            if (remainingSoldiers == 0) {
+                break;
+            }
+        }
     }
-}
+    
+    for (Character* soldier : this->_soilders) {
+        if (chosenEnemy == nullptr) {
+            break;
+        }
+        
+        if (soldier->isAlive() && dynamic_cast<YoungNinja*>(soldier)) {
+            YoungNinja* youngNinja = dynamic_cast<YoungNinja*>(soldier);
+            if (youngNinja->distance(chosenEnemy) < 1) {
+                youngNinja->slash(chosenEnemy);
+            } else {
+                youngNinja->move(chosenEnemy);
+            }
+            
+            if (!chosenEnemy->isAlive()) {
+                chosenEnemy = chooseEnemy(enemy_team);
+            }
+            
+            remainingSoldiers--;
+            
+            if (remainingSoldiers == 0) {
+                break;
+            }
+        }
+    }
 
-//  std :: cout << "aa" << endl;
+    //old Ninjas 
+    for (Character* soldier : this->_soilders) {
+        if (chosenEnemy == nullptr) {
+            break;
+        }
+        
+        if (soldier->isAlive() && dynamic_cast<OldNinja*>(soldier)) {
+            OldNinja* oldNinja = dynamic_cast<OldNinja*>(soldier);
+            if (oldNinja->distance(chosenEnemy) < 1) {
+                oldNinja->slash(chosenEnemy);
+            } else {
+                oldNinja->move(chosenEnemy);
+            }
+            
+            if (!chosenEnemy->isAlive()) {
+                chosenEnemy = chooseEnemy(enemy_team);
+            }
+            
+            remainingSoldiers--;
+            
+            if (remainingSoldiers == 0) {
+                break;
+            }
+        }
+    }
 
-    // for(Character* enemy : enemy_team->_soilders){
-    //     enemy->hit_points=0;
-    // }
-    // return;
+    //Trained ninjas
+    for (Character* soldier : this->_soilders) {
+        if (chosenEnemy == nullptr) {
+            break;
+        }
+        
+        if (soldier->isAlive() && dynamic_cast<TrainedNinja*>(soldier)) {
+            TrainedNinja* trainedNinja = dynamic_cast<TrainedNinja*>(soldier);
+            if (trainedNinja->distance(chosenEnemy) < 1) {
+                trainedNinja->slash(chosenEnemy);
+            } else {
+                trainedNinja->move(chosenEnemy);
+            }
+            
+            if (!chosenEnemy->isAlive()) {
+                chosenEnemy = chooseEnemy(enemy_team);
+            }
+            
+            remainingSoldiers--;
+            
+            if (remainingSoldiers == 0) {
+                break;
+            }
+        }
+    }
+	
+
+   /*End of function*/
 }
 
 std::string Team::print(){

@@ -14,7 +14,7 @@ class Character{
 
 public:
 
-//was protected !!!!
+
 Point _location;
 int hit_points;
 std::string _name;
@@ -27,7 +27,7 @@ Character(std::string name , Point loc);
 Character(Point loc , std::string name);
 
 //destructor:
-virtual ~Character() = default;////////////////////////////
+virtual ~Character()=default;//////////////////////////// 
 
 //-------------------------------------------Rule of five--------------------------------------------
 

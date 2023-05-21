@@ -14,22 +14,6 @@ class TrainedNinja : public Character{
     //constructor
     TrainedNinja(std::string name , Point loc);
 
-    //destructor
-    ~TrainedNinja() override;
-
-    //--------------------------------Rule of five------------------------------------
-     // Copy constructor
-    TrainedNinja(const TrainedNinja& other);
-
-    // Copy assignment operator
-    TrainedNinja& operator=(const TrainedNinja& other);
-
-    // Move constructor
-    TrainedNinja(TrainedNinja&& other) noexcept;
-
-    // Move assignment operator
-    TrainedNinja& operator=(TrainedNinja&& other) noexcept;
-    //-------------------------------------------------------------------------------------
 
     //functions 
     void move(Character* enemy);//was pure virtual (interface)

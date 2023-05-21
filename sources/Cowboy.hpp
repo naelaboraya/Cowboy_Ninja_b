@@ -15,21 +15,6 @@ public:
 //constructor
 Cowboy(std::string name , Point loc);
 
-~Cowboy() override;
-
-//---------------------------------------------Rule of five----------------------------------------
- // Copy constructor
-    Cowboy(const Cowboy& other);
-
-    // Copy assignment operator
-    Cowboy& operator=(const Cowboy& other);
-
-    // Move constructor
-    Cowboy(Cowboy&& other) noexcept;
-
-    // Move assignment operator
-    Cowboy& operator=(Cowboy&& other) noexcept;
-//-----------------------------------------------------------------------------------------------------
 
 //functions
 void shoot(Character* enemy);

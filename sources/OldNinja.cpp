@@ -9,41 +9,6 @@ OldNinja::OldNinja(std::string name , Point loc) : Character(name,loc){
     this->hit_points = 150;
 }
 
-//destructor
-OldNinja::~OldNinja(){}
-
-//-----------------------------------Rule of five--------------------------------------
-// Copy constructor
-OldNinja::OldNinja(const OldNinja& other)
-    : Character(other) {
-    // Perform any additional deep copying or resource allocation specific to OldNinja
-}
-
-// Copy assignment operator
-OldNinja& OldNinja::operator=(const OldNinja& other) {
-    if (this != &other) {
-        Character::operator=(other);
-        // Perform any additional deep copying or resource allocation specific to OldNinja
-    }
-    return *this;
-}
-
-// Move constructor
-OldNinja::OldNinja(OldNinja&& other) noexcept
-    : Character(std::move(other)) {
-    // Transfer ownership of any resources from 'other' to 'this'
-}
-
-// Move assignment operator
-OldNinja& OldNinja::operator=(OldNinja&& other) noexcept {
-    if (this != &other) {
-        Character::operator=(std::move(other));
-        // Transfer ownership of any resources from 'other' to 'this'
-    }
-    return *this;
-}
-//-------------------------------------------------------------------------------------
-
 //functions
 
 void OldNinja::move(Character* enemy){
